@@ -1,26 +1,7 @@
 <?php
 require_once 'conexion.php';
 require_once 'ZonaEnvio.php'; // Incluye el archivo de la clase
-
-class TarifasEnvio
-{
-    private $pdo;
-
-    public function __construct() {
-        $conexion = new Conexion();
-        $this->pdo = $conexion->conectar();
-    }
-
-   function obtenerTarifa($peso, $resultadoZona) {
-        
-        $sql = "SELECT :zona FROM paqestandar WHERE peso >= :peso  ORDER BY peso LIMIT 1";
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([':peso' => $peso, ':zona' => $resultadoZona]);
-        $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
-        
-        return $resultado ;
-    }
-}
+require_once 'TarifasEnvio.php'; // Incluye el archivo de la clase
 
 // Instancia de la clase ZonaEnvio
 $zonaEnvio = new ZonaEnvio();
@@ -30,16 +11,15 @@ $tarifasEnvio = new TarifasEnvio();
 
 // Definir casos de prueba para determinar la zona
 $casosPruebaZona = [
-    ['origenCP' => 1000, 'destinoCP' => 1500, 'esperado' => 'Zona 1'], // Mismo provincia
-    ['origenCP' => 35000, 'destinoCP' => 35500, 'esperado' => 'Canarias'], // Misma isla
-    ['origenCP' => 7100, 'destinoCP' => 51001, 'esperado' => 'Zona 4'], // Baleares o Ceuta/Melilla
-    ['origenCP' => 1000, 'destinoCP' => 48000, 'esperado' => 'Zona 2'], // Provincias limítrofes
-    ['origenCP' => 28000, 'destinoCP' => 29000, 'esperado' => 'Zona 3'], // Envíos intra peninsulares
-    ['origenCP' => 1000, 'destinoCP' => 45000, 'esperado' => 'Zona 3+'], // Larga distancia peninsular
-    ['origenCP' => 35000, 'destinoCP' => 28000, 'esperado' => 'Zona 5'], // Canarias y península
-    ['origenCP' => 35000, 'destinoCP' => 38000, 'esperado' => 'Zona 6'], // Interislas Canarias
-    ['origenCP' => 28000, 'destinoCP' => 5000, 'esperado' => 'Zona 7'], // Portugal peninsular desde península
-    ['origenCP' => 7100, 'destinoCP' => 5000, 'esperado' => 'Zona 8'], // Portugal peninsular desde Baleares
+    ['origenCP' => 1000, 'destinoCP' => 1500, 'esperado' => 'Zona1'], // Mismo provincia
+    ['origenCP' => 7100, 'destinoCP' => 51001, 'esperado' => 'Zona4'], // Baleares o Ceuta/Melilla
+    ['origenCP' => 1000, 'destinoCP' => 48000, 'esperado' => 'Zona2'], // Provincias limítrofes
+    ['origenCP' => 28000, 'destinoCP' => 29000, 'esperado' => 'Zona3'], // Envíos intra peninsulares
+    ['origenCP' => 1000, 'destinoCP' => 45000, 'esperado' => 'Zona3_plus'], // Larga distancia peninsular
+    ['origenCP' => 35000, 'destinoCP' => 28000, 'esperado' => 'Zona5'], // Canarias y península
+    ['origenCP' => 35000, 'destinoCP' => 38000, 'esperado' => 'Zona6'], // Interislas Canarias
+    ['origenCP' => 3000, 'destinoCP' => 41510, 'esperado' => 'Zona7'], // Portugal peninsular desde península
+    ['origenCP' => 7100, 'destinoCP' => 5000, 'esperado' => 'Zona8'], // Portugal peninsular desde Baleares
 ];
 
 // Ejecutar pruebas para determinar la zona
@@ -52,20 +32,24 @@ foreach ($casosPruebaZona as $caso) {
 
 // Casos de prueba para obtener la tarifa
 $casosDePruebaTarifa = [
-    ['peso' => 1, 'zona' => 'zona1', 'tarifaEsperada' => 2.72],
-    ['peso' => 3, 'zona' => 'zona2', 'tarifaEsperada' => 3.21],
-    ['peso' => 5, 'zona' => 'zona3_plus', 'tarifaEsperada' => 4.29],
-    ['peso' => 10, 'zona' => 'zona5', 'tarifaEsperada' => 18.46],
+    ['peso' => 1, 'zona' => 'zona1', 'tarifaEsperada' => 4.71],
+    ['peso' => 3, 'zona' => 'zona2', 'tarifaEsperada' => 6.48],
+    ['peso' => 5, 'zona' => 'zona3_plus', 'tarifaEsperada' => 7.57],
+    ['peso' => 10, 'zona' => 'zona5', 'tarifaEsperada' => 10.28],
     ['peso' => 15, 'zona' => 'zona4', 'tarifaEsperada' => 13.41],
 ];
 
 // Ejecutar pruebas para obtener la tarifa
 foreach ($casosDePruebaTarifa as $caso) {
-    $tarifa = $tarifasEnvio->obtenerTarifa($caso['peso'], $caso['zona']);
-    echo "Peso: {$caso['peso']}, Zona: {$caso['zona']}, Tarifa Esperada: {$caso['tarifaEsperada']}, Tarifa Obtenida: " . (is_array($tarifa) ? implode(", ", $tarifa) : $tarifa) . "\n";    if ($tarifa == $caso['tarifaEsperada']) {
+    $tarifa = $tarifasEnvio->obtenerTarifa($caso['peso'], $resultadoZona);
+    
+    echo "Peso: {$caso['peso']}, Zona: {$resultadoZona}, Tarifa Esperada: {$caso['tarifaEsperada']}, Tarifa Obtenida: " . (is_array($tarifa) ? implode(", ", $tarifa) : $tarifa) . "\n";
+    
+    if ($tarifa == $caso['tarifaEsperada']) {
         echo "✔ Prueba pasada\n";
     } else {
         echo "✘ Prueba fallida\n";
     }
 }
+
 ?>

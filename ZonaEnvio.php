@@ -71,11 +71,12 @@ public function determinarZonaEnvio($origenCP, $destinoCP){
         'El Hierro' => range(38900, 38999),
         'La Graciosa' => range(35540, 35549)
     ];
+    
 
     // Verificar si el origen y destino están en la misma provincia
     foreach ($provincias as $provincia => $rango) {
         if (in_array($origenCP, $rango) && in_array($destinoCP, $rango)) {
-            return 'Zona 1'; // Mismo provincia
+            return 'Zona1'; // Mismo provincia
         }
     }
 
@@ -88,42 +89,42 @@ public function determinarZonaEnvio($origenCP, $destinoCP){
 
     // Verificar si el origen o destino están en Baleares, Ceuta o Melilla
     if ($this->esBalearesCeutaMelilla($origenCP, $destinoCP, $baleares)) {
-        return 'Zona 4'; // Baleares, Ceuta, Melilla
+        return 'Zona4'; // Baleares, Ceuta, Melilla
     }
 
     // Verificar si el origen y destino son provincias limítrofes
     if ($this->esProvinciaLimitrofe($origenCP, $destinoCP,$provincias)) {
-        return 'Zona 2'; // Provincias limítrofes
+        return 'Zona2'; // Provincias limítrofes
     }
 
     // Verificar si el origen y destino están en la península o Andorra
     if ($this->esIntraPeninsular($origenCP, $destinoCP, $baleares)) {
-        return 'Zona 3'; // Envíos Intra Peninsulares o Andorra
+        return 'Zona3'; // Envíos Intra Peninsulares o Andorra
     }
 
     // Verificar si el envío es de larga distancia en la península o Andorra
     if ($this->esLargaDistanciaIntraPeninsular($origenCP, $destinoCP)) {
-        return 'Zona 3+'; // Larga distancia intra peninsular
+        return 'Zona3_plus'; // Larga distancia intra peninsular
     }
 
     // Verificar si el origen y destino son Canarias y Península (o Andorra)
     if ($this->esCanariasPenínsula($origenCP, $destinoCP)) {
-        return 'Zona 5'; // Envíos a Canarias con origen en Península o Andorra y viceversa
+        return 'Zona5'; // Envíos a Canarias con origen en Península o Andorra y viceversa
     }
 
     // Verificar si el origen y destino están dentro de Canarias (Interislas)
     if ($this->esCanariasInterislas($origenCP, $destinoCP)) {
-        return 'Zona 6'; // Envíos Interislas en Canarias
+        return 'Zona6'; // Envíos Interislas en Canarias
     }
 
     // Verificar si el origen está en la Península y el destino en Portugal Peninsular
     if ($this->esPortugalPeninsular($origenCP, $destinoCP)) {
-        return 'Zona 7'; // Envíos a Portugal Peninsular con origen en Península
+        return 'Zona7'; // Envíos a Portugal Peninsular con origen en Península
     }
 
     // Verificar si el origen está en Baleares y el destino en Portugal Peninsular
     if ($this->esPortugalPeninsularDesdeBaleares($origenCP, $destinoCP)) {
-        return 'Zona 8'; // Envíos a Portugal Peninsular con origen en Baleares
+        return 'Zona8'; // Envíos a Portugal Peninsular con origen en Baleares
     }
 
     return 'Zona desconocida'; // Si no se encuentra ninguna coincidencia
@@ -228,12 +229,106 @@ private function esCanariasPenínsula($origenCP, $destinoCP){
 private function esCanariasInterislas($origenCP, $destinoCP){
     return ($origenCP >= 35000 && $origenCP <= 38999) && ($destinoCP >= 35000 && $destinoCP <= 38999);
 }
+/*
+// Función para determinar si el código postal es de Portugal o España
+private function paisDesdeCP($codigoPostal) {
+    $portugal = [
+        'Lisboa' => [1000, 1999],
+        'Porto' => [4000, 4999],
+        'Braga' => [4700, 4799],
+        'Aveiro' => [3800, 3899],
+        'Coimbra' => [3000, 3099],
+        'Faro (Algarve)' => [8000, 8999],
+        'Setúbal' => [2900, 2999],
+        'Leiria' => [2400, 2499],
+        'Viseu' => [3500, 3599],
+        'Madeira' => [9000, 9999],
+        'Açores (Azores)' => [9500, 9599],
+    ];
+    
+    $provincias = [
+        'Álava' => [1000, 1999],
+        'Albacete' => [2000, 2999],
+        'Alicante' => [3000, 3999],
+        'Almería' => [4000, 4999],
+        'Asturias' => [33000, 33999],
+        'Ávila' => [5000, 5999],
+        'Badajoz' => [6000, 6999],
+        'Barcelona' => [8000, 8999],
+        'Burgos' => [9000, 9999],
+        'Cáceres' => [10000, 10999],
+        'Cádiz' => [11000, 11999],
+        'Cantabria' => [39000, 39999],
+        'Castellón' => [12000, 12999],
+        'Ciudad Real' => [13000, 13999],
+        'Córdoba' => [14000, 14999],
+        'Cuenca' => [16000, 16999],
+        'Girona' => [17000, 17999],
+        'Granada' => [18000, 18999],
+        'Guadalajara' => [19000, 19999],
+        'Huelva' => [21000, 21999],
+        'Huesca' => [22000, 22999],
+        'Jaén' => [23000, 23999],
+        'La Rioja' => [26000, 26999],
+        'León' => [24000, 24999],
+        'Lleida' => [25000, 25999],
+        'Lugo' => [27000, 27999],
+        'Madrid' => [28000, 28999],
+        'Málaga' => [29000, 29999],
+        'Murcia' => [30000, 30999],
+        'Navarra' => [31000, 31999],
+        'Ourense' => [32000, 32999],
+        'Palencia' => [34000, 34999],
+        'Pontevedra' => [36000, 36999],
+        'Salamanca' => [37000, 37999],
+        'Segovia' => [40000, 40999],
+        'Sevilla' => [41000, 41999],
+        'Soria' => [42000, 42999],
+        'Tarragona' => [43000, 43999],
+        'Teruel' => [44000, 44999],
+        'Toledo' => [45000, 45999],
+        'Valencia' => [46000, 46999],
+        'Valladolid' => [47000, 47999],
+        'Vizcaya' => [48000, 48999],
+        'Zamora' => [49000, 49999],
+        'Zaragoza' => [50000, 50999],
+        'Ceuta' => [51000, 51099],
+        'Melilla' => [52000, 52099],
+    ];
 
-// Verificar si el envío es a Portugal desde la Península
-private function esPortugalPeninsular($origenCP, $destinoCP){
-    return ($origenCP >= 28000 && $origenCP <= 28999) && ($destinoCP >= 1000 && $destinoCP <= 9999);
+    // Verificar si el código postal está en el rango de Portugal
+    foreach ($portugal as $rango) {
+        if ($codigoPostal >= $rango[0] && $codigoPostal <= $rango[1]) {
+            return 'Portugal';
+        }
+    }
+
+    // Verificar si el código postal está en el rango de España
+    foreach ($provincias as $rango) {
+        if ($codigoPostal >= $rango[0] && $codigoPostal <= $rango[1]) {
+            return 'España';
+        }
+    }
+
+    return 'Desconocido'; // Si no pertenece a ninguno de los dos
 }
 
+// Verificación si el origen está en Portugal Peninsular y el destino en otro país
+private function esPortugalPeninsular($origenCP, $destinoCP) {
+    // Obtener los países de origen y destino
+    $origenPais = $this->paisDesdeCP($origenCP);
+    $destinoPais = $this->paisDesdeCP($destinoCP);
+
+    // Verificar si el origen está en Portugal Peninsular y el destino está en España
+    if ($origenPais === 'Portugal' && $destinoPais === 'España') {
+        return 'Zona 7'; // Envíos a Portugal Peninsular desde España
+    }
+
+    return 'Fuera de la zona'; // Si no es Portugal Peninsular y España
+}
+
+
+*/
 // Verificar si el envío es a Portugal desde Baleares
 private function esPortugalPeninsularDesdeBaleares($origenCP, $destinoCP){
     return ($origenCP >= 7000 && $origenCP <= 7999) && ($destinoCP >= 1000 && $destinoCP <= 9999);
