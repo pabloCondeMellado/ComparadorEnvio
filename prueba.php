@@ -32,7 +32,7 @@ foreach ($casosPruebaZona as $caso) {
 
 // Casos de prueba para obtener la tarifa
 $casosDePruebaTarifa = [
-    ['peso' => 1, 'zona' => 'zona1', 'tarifaEsperada' => 4.71],
+    ['peso' =>  1, 'zona' => 'zona1', 'tarifaEsperada' => 4.71],
     ['peso' => 3, 'zona' => 'zona2', 'tarifaEsperada' => 6.48],
     ['peso' => 5, 'zona' => 'zona3_plus', 'tarifaEsperada' => 7.57],
     ['peso' => 10, 'zona' => 'zona5', 'tarifaEsperada' => 10.28],
@@ -41,9 +41,9 @@ $casosDePruebaTarifa = [
 
 // Ejecutar pruebas para obtener la tarifa
 foreach ($casosDePruebaTarifa as $caso) {
-    $tarifa = $tarifasEnvio->obtenerTarifa($caso['peso'], $resultadoZona);
+    $tarifa = $tarifasEnvio->obtenerTarifa($caso['peso'], $caso['zona']);
     
-    echo "Peso: {$caso['peso']}, Zona: {$resultadoZona}, Tarifa Esperada: {$caso['tarifaEsperada']}, Tarifa Obtenida: " . (is_array($tarifa) ? implode(", ", $tarifa) : $tarifa) . "\n";
+    echo "Peso: {$caso['peso']}, Zona: {$caso['zona']}, Tarifa Esperada: {$caso['tarifaEsperada']}, Tarifa Obtenida: " . (is_array($tarifa) ? implode(", ", $tarifa) : $tarifa) . "\n";
     
     if ($tarifa == $caso['tarifaEsperada']) {
         echo "✔ Prueba pasada\n";

@@ -229,7 +229,7 @@ private function esCanariasPenínsula($origenCP, $destinoCP){
 private function esCanariasInterislas($origenCP, $destinoCP){
     return ($origenCP >= 35000 && $origenCP <= 38999) && ($destinoCP >= 35000 && $destinoCP <= 38999);
 }
-/*
+
 // Función para determinar si el código postal es de Portugal o España
 private function paisDesdeCP($codigoPostal) {
     $portugal = [
@@ -321,14 +321,13 @@ private function esPortugalPeninsular($origenCP, $destinoCP) {
 
     // Verificar si el origen está en Portugal Peninsular y el destino está en España
     if ($origenPais === 'Portugal' && $destinoPais === 'España') {
-        return 'Zona 7'; // Envíos a Portugal Peninsular desde España
+        return 'Zona7'; // Envíos a Portugal Peninsular desde España
     }
 
     return 'Fuera de la zona'; // Si no es Portugal Peninsular y España
 }
 
 
-*/
 // Verificar si el envío es a Portugal desde Baleares
 private function esPortugalPeninsularDesdeBaleares($origenCP, $destinoCP){
     return ($origenCP >= 7000 && $origenCP <= 7999) && ($destinoCP >= 1000 && $destinoCP <= 9999);
