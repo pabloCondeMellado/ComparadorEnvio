@@ -1,19 +1,22 @@
 <?php
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Methods: POST");
+header("Content-Type: application/json");
 
 class ZonaEnvio {
 
 public function determinarZonaEnvio($origenCP, $destinoCP){
     // Definir las provincias y sus códigos postales
     $provincias = [
-        'Álava' => range(01000, 01999),
-        'Albacete' => range(02000, 02999),
-        'Alicante' => range(03000, 03999),
-        'Almería' => range(04000, 04999),
+        'Álava' => range(1000, 1999),
+        'Albacete' => range(2000, 2999),
+        'Alicante' => range(3000, 3999),
+        'Almería' => range(4000, 4999),
         'Asturias' => range(33000, 33999),
-        'Ávila' => range(05000, 05999),
-        'Badajoz' => range(06000, 06999),
-        'Barcelona' => range(08000, 08999),
-        'Burgos' => range(09000, 09999),
+        'Ávila' => range(5000, 5999),
+        'Badajoz' => range(6000, 6999),
+        'Barcelona' => range(8000, 8999),
+        'Burgos' => range(9000, 9999),
         'Cáceres' => range(10000, 10999),
         'Cádiz' => range(11000, 11999),
         'Cantabria' => range(39000, 39999),
@@ -55,7 +58,7 @@ public function determinarZonaEnvio($origenCP, $destinoCP){
     ];
 
     // Definir las Islas Baleares y sus códigos postales
-    $baleares = range(07000, 07999); // Islas Baleares
+    $baleares = range(7000, 7999); // Islas Baleares
 
     // Definir las Islas Canarias y sus códigos postales
     $canarias = [
@@ -89,12 +92,12 @@ public function determinarZonaEnvio($origenCP, $destinoCP){
     }
 
     // Verificar si el origen y destino son provincias limítrofes
-    if ($this->esProvinciaLimitrofe($origenCP, $destinoCP)) {
+    if ($this->esProvinciaLimitrofe($origenCP, $destinoCP,$provincias)) {
         return 'Zona 2'; // Provincias limítrofes
     }
 
     // Verificar si el origen y destino están en la península o Andorra
-    if ($this->esIntraPeninsular($origenCP, $destinoCP)) {
+    if ($this->esIntraPeninsular($origenCP, $destinoCP, $baleares)) {
         return 'Zona 3'; // Envíos Intra Peninsulares o Andorra
     }
 
@@ -199,9 +202,9 @@ public function determinarZonaEnvio($origenCP, $destinoCP){
     }
 
 // Lógica para verificar si el envío es Intra Peninsular
-private function esIntraPeninsular($origenCP, $destinoCP){
+private function esIntraPeninsular($origenCP, $destinoCP, $baleares){
     // Definir si el origen y destino están en la península
-    return !$this->esCanariasPenínsula($origenCP, $destinoCP) && !$this->esBalearesCeutaMelilla($origenCP, $destinoCP);
+    return !$this->esCanariasInterislas($origenCP, $destinoCP) && !$this->esBalearesCeutaMelilla($origenCP, $destinoCP, $baleares)&& !$this->esCanariasPenínsula($origenCP, $destinoCP) &&!$this->esLargaDistanciaIntraPeninsular($origenCP,$destinoCP);
 }
 
 // Verificar si el envío es de larga distancia Intra Peninsular
@@ -233,7 +236,7 @@ private function esPortugalPeninsular($origenCP, $destinoCP){
 
 // Verificar si el envío es a Portugal desde Baleares
 private function esPortugalPeninsularDesdeBaleares($origenCP, $destinoCP){
-    return ($origenCP >= 07000 && $origenCP <= 07999) && ($destinoCP >= 1000 && $destinoCP <= 9999);
+    return ($origenCP >= 7000 && $origenCP <= 7999) && ($destinoCP >= 1000 && $destinoCP <= 9999);
 }
 
 // Obtener el rango de CP de una provincia (para simplificar)
