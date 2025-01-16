@@ -48,66 +48,165 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         header('Content-Type: text/html; charset=UTF-8');
 ?>
 <!DOCTYPE html>
- <html lang="es">
+<html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Resultados de Tarifas de Envío</title>
-<style>
-
-    body { font-family: Arial, sans-serif; line-height: 1.6; }
-        h2 { color: #333; }
-        p { font-size: 18px; color: #555; }
-div { margin-bottom: 20px; }
-.error { color: red; font-weight: bold; }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>Resultados de Tarifas de Envío</title>
 </head>
-  <body>
+<style>
+      /* Reset de márgenes y padding */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
- <h2>Resultados de Tarifas de Envío</h2>
-   <p><strong>Zona de Envío:</strong> <?php echo  $zonaEnvio ?> </p>
+/* Estilo básico del cuerpo */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    padding: 20px;
+    color: #333;
+}
+
+/* Título principal */
+h2 {
+    font-size: 28px;
+    color: #333;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Párrafos */
+p {
+    font-size: 18px;
+    color: #555;
+    margin-bottom: 20px;
+}
+
+/* Estilo para los contenedores de tarifas */
+div {
+    margin-bottom: 20px;
+}
+
+/* Estilo para las tarifas */
+.tarifa-container {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 20px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    background-color: #ffffff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilo para el nombre de la tarifa */
+.tarifa-container h3 {
+    font-size: 20px;
+    color: #333;
+    margin-right: 10px;
+    flex-grow: 1;
+}
+
+/* Estilo para el precio de la tarifa */
+.tarifa-container p {
+    font-size: 18px;
+    font-weight: bold;
+    color: #4CAF50;
+}
+
+/* Estilo para las tarifas con error */
+.error {
+    color: red;
+    font-weight: bold;
+}
+
+/* Estilo para los mensajes de error */
+.error-message {
+    padding: 10px;
+    background-color: #fdd;
+    border-radius: 6px;
+    color: #a33;
+}
+
+/* Estilos responsivos */
+@media (max-width: 600px) {
+    body {
+        padding: 15px;
+    }
+
+    h2 {
+        font-size: 24px;
+    }
+
+    .tarifa-container {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .tarifa-container h3,
+    .tarifa-container p {
+        margin-bottom: 8px;
+    }
+
+    .tarifa-container p {
+        font-size: 16px;
+    }
+}
+
+</style>
+<body>
+
+<h2>Resultados de Tarifas de Envío</h2>
+<p><strong>Zona de Envío:</strong> <?php echo  $zonaEnvio ?> </p>
+
 <?php
-        // Mostrar tarifa estándar
-        if ($tarifaEstandar) {
-            echo '<div>';
-            echo '<h3>Tarifa Paquete Estándar</h3>';
-            echo '<p><strong>Tarifa: </strong>' . $tarifaEstandar . ' EUR</p>';
-            echo '</div>';
-        } else {
-            echo '<div>';
-            echo '<h3>Tarifa Paquete Estándar</h3>';
-            echo '<p class="error">Error: No se encontró una tarifa para los datos proporcionados.</p>';
-            echo '</div>';
-        }
+// Mostrar tarifa estándar
+if ($tarifaEstandar) {
+    echo '<div class="tarifa-container">';
+    echo '<h3>Tarifa Paquete Estándar</h3>';
+    echo '<p>' . $tarifaEstandar . ' EUR</p>';
+    echo '</div>';
+} else {
+    echo '<div class="tarifa-container">';
+    echo '<h3>Tarifa Paquete Estándar</h3>';
+    echo '<p class="error-message">Error: No se encontró una tarifa para los datos proporcionados.</p>';
+    echo '</div>';
+}
 
-        // Mostrar tarifa premium
-        if ($tarifaPremium) {
-            echo '<div>';
-            echo '<h3>Tarifa Paquete Premium</h3>';
-            echo '<p><strong>Tarifa: </strong>' . $tarifaPremium . ' EUR</p>';
-            echo '</div>';
-        } else {
-            echo '<div>';
-            echo '<h3>Tarifa Paquete Premium</h3>';
-            echo '<p class="error">Error: No se encontró una tarifa para los datos proporcionados.</p>';
-            echo '</div>';
-        }
+// Mostrar tarifa premium
+if ($tarifaPremium) {
+    echo '<div class="tarifa-container">';
+    echo '<h3>Tarifa Paquete Premium</h3>';
+    echo '<p>' . $tarifaPremium . ' EUR</p>';
+    echo '</div>';
+} else {
+    echo '<div class="tarifa-container">';
+    echo '<h3>Tarifa Paquete Premium</h3>';
+    echo '<p class="error-message">Error: No se encontró una tarifa para los datos proporcionados.</p>';
+    echo '</div>';
+}
 
-        // Mostrar tarifa ligero (si corresponde)
-        if ($tarifaLigero) {
-            echo '<div>';
-            echo '<h3>Tarifa Paquete Ligero</h3>';
-            echo '<p><strong>Tarifa: </strong>' . $tarifaLigero . ' EUR</p>';
-            echo '</div>';
-        } else {
-            echo '<div>';
-            echo '<h3>Tarifa Paquete Ligero</h3>';
-            echo '<p class="error">Error: No se encontró una tarifa para los datos proporcionados o el peso no es adecuado.</p>';
-            echo '</div>';
-        }
-        // Cerrar HTML
-       echo'</body>';
-       echo'</html>';
+// Mostrar tarifa ligera (si corresponde)
+if ($tarifaLigero) {
+    echo '<div class="tarifa-container">';
+    echo '<h3>Tarifa Paquete Ligero</h3>';
+    echo '<p>' . $tarifaLigero . ' EUR</p>';
+    echo '</div>';
+} else {
+    echo '<div class="tarifa-container">';
+    echo '<h3>Tarifa Paquete Ligero</h3>';
+    echo '<p class="error-message">Error: No se encontró una tarifa para los datos proporcionados o el peso no es adecuado.</p>';
+    echo '</div>';
+}
     }
 }
 ?>
+</body>
+</html>
+
+
+
+    

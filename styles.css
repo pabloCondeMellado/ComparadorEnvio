@@ -75,7 +75,7 @@
   .shipping-calculator button:hover {
     background-color: #e55a00;
   }
-  
+
   /* Responsividad */
   @media (max-width: 768px) {
     .section {
