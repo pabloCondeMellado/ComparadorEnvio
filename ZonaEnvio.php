@@ -4,7 +4,16 @@ header("Access-Control-Allow-Methods: POST");
 header("Content-Type: application/json");
 
 class ZonaEnvio {
+    
+    public $zona;
 
+    public function __construct() { // or initialize it with a meaningful value
+    }
+      // Implementar el método mágico __toString()
+      public function __toString() {
+        return (string) $this->zona; // O puedes retornar algo más descriptivo, como:
+        // return "Código: $this->codigo, Zona: $this->zona";
+    }
 public function determinarZonaEnvio($origenCP, $destinoCP){
     // Definir las provincias y sus códigos postales
     $provincias = [
@@ -129,7 +138,11 @@ public function determinarZonaEnvio($origenCP, $destinoCP){
 
     return 'Zona desconocida'; // Si no se encuentra ninguna coincidencia
 }
-
+private function generateResponse($zona, $mensaje) {
+        return json_encode([
+            'zona' => $zona
+        ]);
+    }
  // Lógica para verificar provincias limítrofes
  private function esProvinciaLimitrofe($origenCP, $destinoCP, $provincias){
      // Definir las provincias limítrofes

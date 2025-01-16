@@ -1,0 +1,91 @@
+/* Contenedor principal */
+.shipping-calculator {
+    max-width: 80%; /* Ocupa todo el ancho */
+    margin: 2rem auto;
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    font-family: Arial, sans-serif;
+    color: #333;
+    display: flex; /* Contenedor flexible para la disposición horizontal */
+    flex-direction: column; /* Contenido principal organizado verticalmente */
+  }
+  
+  /* Título principal */
+  .shipping-calculator h1 {
+    font-size: 24px;
+    text-align: center;
+    color: #003087;
+    margin-bottom: 20px;
+  }
+  
+  /* Contenedor para las secciones */
+  .section {
+    display: flex; /* Distribuir los elementos en fila */
+    justify-content: space-between; /* Espacio entre los campos */
+    align-items: center; /* Alineación vertical */
+    gap: 15px; /* Espaciado entre los campos */
+    margin-bottom: 20px; /* Espaciado inferior */
+  }
+  
+  /* Estilo de etiquetas */
+  .shipping-calculator label {
+    font-weight: bold;
+    color: #003087;
+    min-width: 150px; /* Ancho mínimo para las etiquetas */
+    text-align: right; /* Alinea el texto de las etiquetas a la derecha */
+  }
+  
+  /* Estilo de inputs y selects */
+  .shipping-calculator input,
+  .shipping-calculator select {
+    flex: 1; /* Toma el espacio disponible */
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    transition: border-color 0.3s ease-in-out;
+  }
+  
+  .shipping-calculator input:focus,
+  .shipping-calculator select:focus {
+    outline: none;
+    border-color: #003087;
+  }
+  
+  /* Botón de cálculo */
+  .shipping-calculator button {
+    background-color: #ff6600;
+    color: #ffffff;
+    border: none;
+    padding: 10px 15px;
+    font-size: 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+    margin-top: 20px;
+    width: 200px;
+    text-transform: uppercase;
+    font-weight: bold;
+    align-self: center; /* Centra el botón */
+  }
+  
+  .shipping-calculator button:hover {
+    background-color: #e55a00;
+  }
+  
+  /* Responsividad */
+  @media (max-width: 768px) {
+    .section {
+      flex-direction: column; /* Cambia a formato vertical en pantallas pequeñas */
+      align-items: flex-start; /* Alinea al inicio */
+    }
+  
+    .shipping-calculator label {
+      text-align: left; /* Cambia a alineación izquierda */
+      margin-bottom: 5px; /* Espaciado inferior para la etiqueta */
+    }
+  }
+  
