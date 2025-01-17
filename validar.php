@@ -1,7 +1,8 @@
 <?php
 require_once 'TarifasEnvio.php'; // Incluye la clase TarifasEnvio
 require_once 'ZonaEnvio.php'; // Incluye la clase ZonaEnvio
-$tarifa = new TarifasEnvio(); // Crea un objeto de la clase TarifasEnvio
+$tarifa = new TarifasEnvio();
+$tarifa1 = new TarifasEnvio(); // Crea un objeto de la clase TarifasEnvio
 $determinarZona = new ZonaEnvio();
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -9,22 +10,36 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         $origenCP = $_POST['origenCP'];
         $destinoCP = $_POST['destinoCP'];
-        $peso = $_POST['peso'];
+       // Datos enviados por el cliente
+$peso_real = $_POST['peso']; // Peso real (en kilogramos)
+$largo = $_POST['largo'];    // Largo (en centímetros)
+$ancho = $_POST['ancho'];    // Ancho (en centímetros)
+$alto = $_POST['alto'];      // Alto (en centímetros)
+
+// Calcular el peso volumétrico
+$peso_volumetrico = ($largo * $ancho * $alto) / 6000;
+
+// Comparar ambos pesos
+if ($peso_volumetrico > $peso_real) {
+    $peso_aplicable = $peso_volumetrico;
+} else {
+    $peso_aplicable = $peso_real;
+}
 
         // Validar que los campos no estén vacíos
-        if (empty($origenCP) || empty($destinoCP) || empty($peso)) {
+        if (empty($origenCP) || empty($destinoCP) || empty($peso_real)) {
             echo '<p style="color: red;">Error: Todos los campos son requeridos.</p>';
             exit;
         }
 
         // Validar que los campos sean numéricos
-        if (!is_numeric($origenCP) || !is_numeric($destinoCP) || !is_numeric($peso)) {
+        if (!is_numeric($origenCP) || !is_numeric($destinoCP) || !is_numeric($peso_real)) {
             echo '<p style="color: red;">Error: Los campos deben ser numéricos.</p>';
             exit;
         }
 
         // Validar que el peso sea mayor a 0
-        if ($peso <= 0) {
+        if ($peso_real <= 0) {
             echo '<p style="color: red;">Error: El peso debe ser mayor a 0.</p>';
             exit;
         }
@@ -33,19 +48,37 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $zonaEnvio = $determinarZona->determinarZonaEnvio($origenCP, $destinoCP);
 
         // Obtener la tarifa correspondiente para Paquete Estándar
-        $tarifaEstandar = $tarifa->obtenerTarifaPaqEstandar($_POST['peso'], $zonaEnvio);
+        $tarifaEstandar = $tarifa->obtenerTarifaPaqEstandar($peso_aplicable, $zonaEnvio);
 
         // Obtener la tarifa correspondiente para Paquete Premium
-        $tarifaPremium = $tarifa->obtenerTarifaPaqPremium($_POST['peso'], $zonaEnvio);
+        $tarifaPremium = $tarifa->obtenerTarifaPaqPremium($peso_aplicable, $zonaEnvio);
+          // Obtener la tarifa correspondiente para Paquete Estándar
+          $tarifaEstandarOficina = $tarifa->obtenerTarifaPaqEstandarOficina($peso_aplicable, $zonaEnvio);
+
+          // Obtener la tarifa correspondiente para Paquete Premium
+          $tarifaPremiumOficina = $tarifa->obtenerTarifaPaqPremiumOficina($peso_aplicable, $zonaEnvio);
 
         // Obtener la tarifa correspondiente para Paquete Ligero (solo si el peso está dentro del rango)
         $tarifaLigero = null;
-        if ($_POST['peso'] <= 2 && $_POST['peso'] >= 0.05) {
-            $tarifaLigero = $tarifa->obtenerTarifaPaqLigero($_POST['peso'], $zonaEnvio);
+        if ($peso_aplicable <= 2 && $peso_aplicable >= 0.05) {
+            $tarifaLigero = $tarifa->obtenerTarifaPaqLigero($peso_aplicable, $zonaEnvio);
         }
 
+        if($peso_aplicable>15){
+           
+            
+            $tarifaExtraEstandar=$tarifa1->pesoExtraEstandar( $zonaEnvio)*($peso_aplicable-15);
+            $tarifaExtraPremium=$tarifa1->pesoExtraPremium( $zonaEnvio)*($peso_aplicable-15);
+            $tarifaExtraEstandarOficina=$tarifa1->pesoExtraEstandarOficina( $zonaEnvio)*($peso_aplicable-15);
+            $tarifaExtraPremiumOficina=$tarifa1->pesoExtraPremiumOficina( $zonaEnvio)*($peso_aplicable-15);
+            $tarifaEstandar=$tarifa->obtenerTarifaPaqEstandar(15, $zonaEnvio)+$tarifaExtraEstandar;
+            $tarifaPremium = $tarifa->obtenerTarifaPaqPremium(15, $zonaEnvio)+$tarifaExtraPremium;
+            $tarifaEstandarOficina = $tarifa->obtenerTarifaPaqEstandarOficina(15, $zonaEnvio)+$tarifaExtraEstandarOficina;
+            $tarifaPremiumOficina = $tarifa->obtenerTarifaPaqPremiumOficina(15, $zonaEnvio)+$tarifaExtraPremiumOficina;
+        }
         // Especificar el tipo de contenido como HTML
         header('Content-Type: text/html; charset=UTF-8');
+
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -69,6 +102,8 @@ body {
     background-color: #f4f4f9;
     padding: 20px;
     color: #333;
+    max-width: 50%;
+    margin: 0 auto;
 }
 
 /* Título principal */
@@ -161,7 +196,7 @@ div {
 
 <h2>Resultados de Tarifas de Envío</h2>
 <p><strong>Zona de Envío:</strong> <?php echo  $zonaEnvio ?> </p>
-
+<p><strong>Peso Volumétrico:</strong> <?php echo  $peso_aplicable ?> </p>
 <?php
 // Mostrar tarifa estándar
 if ($tarifaEstandar) {
@@ -198,7 +233,32 @@ if ($tarifaLigero) {
 } else {
     echo '<div class="tarifa-container">';
     echo '<h3>Tarifa Paquete Ligero</h3>';
-    echo '<p class="error-message">Error: No se encontró una tarifa para los datos proporcionados o el peso no es adecuado.</p>';
+    echo '<p class="error-message"> No se encontró una tarifa para los datos proporcionados.</p>';
+    echo '</div>';
+}
+// Mostrar tarifa estándar
+if ($tarifaEstandarOficina) {
+    echo '<div class="tarifa-container">';
+    echo '<h3>Recoger paquete en oficina Estandar</h3>';
+    echo '<p>' . $tarifaEstandarOficina . ' EUR</p>';
+    echo '</div>';
+} else {
+    echo '<div class="tarifa-container">';
+    echo '<h3>Recoger paquete en oficina Estandar</h3>';
+    echo '<p class="error-message">Error: No se encontró una tarifa para los datos proporcionados.</p>';
+    echo '</div>';
+}
+
+// Mostrar tarifa premium
+if ($tarifaPremiumOficina) {
+    echo '<div class="tarifa-container">';
+    echo '<h3>Recoger paquete en oficina Premium</h3>';
+    echo '<p>' . $tarifaPremiumOficina . ' EUR</p>';
+    echo '</div>';
+} else {
+    echo '<div class="tarifa-container">';
+    echo '<h3>Tarifa Paquete Premium</h3>';
+    echo '<p class="error-message">Error: No se encontró una tarifa para los datos proporcionados.</p>';
     echo '</div>';
 }
     }
