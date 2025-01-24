@@ -24,7 +24,11 @@
             <legend>Datos de Origen</legend>
             <div class="section">
                 <label for="origenPais">País de origen:</label>
-               
+                <select id="origenPais" name="origenPais" required>
+                    <option value="">Seleccione un país</option>
+                    <option value="Portugal">Portugal</option>
+                    <option value="España" selected>España</option>
+                </select>
   
                 <label for="origenCP">Código Postal de origen:</label>
                 <input
@@ -42,7 +46,11 @@
             <legend>Datos de Destino</legend>
             <div class="section">
                 <label for="destinoPais">País de destino:</label>
-             
+                <select id="destinoPais" name="destinoPais" required>
+                    <option value="">Seleccione un país</option>
+                    <option value="Portugal">Portugal</option>
+                    <option value="España" selected>España</option>
+                </select>
   
                 <label for="destinoCP">Código Postal de destino:</label>
                 <input
@@ -113,4 +121,3 @@
   </div>
 </body>
 </html>
-

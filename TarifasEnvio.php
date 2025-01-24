@@ -12,37 +12,30 @@ class TarifasEnvio
 
     public function obtenerTarifaPaqEstandar($peso, $zona) {
 
-      
-        
-        // Construir la consulta SQL con el nombre de la zona dinámicamente
-        $sql = "SELECT $zona FROM paqestandar WHERE peso >= :peso ORDER BY peso LIMIT 1";
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([':peso' => $peso]);
-        $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
-        
-        if ($resultado) {
-            return $resultado[$zona]; // Devolver el valor correspondiente a la zona
-        } else {
-            return null; // Si no se encuentra ningún resultado
-        }
+ 
+    // Construir la consulta SQL para obtener la tarifa correspondiente al peso
+    $sql = "SELECT $zona FROM paqestandar WHERE peso >= $peso  ";
+    $stmt = $this->pdo->prepare($sql);
+    $stmt->execute();
+    
+    // Obtener el resultado de la consulta
+    $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
+    echo ''. $sql .'';
+    // Verificar si se obtuvo un resultado
+    if ($resultado) {
+        return $resultado[$zona]; // Devolver el valor correspondiente a la zona
+    } else {
+        return null; // Si no se encuentra un resultado adecuado
     }
-    
-    
+    }   
     public function obtenerTarifaPaqPremium($peso, $zona) {
 
-        $zona = strtolower(trim($zona));
-        // Asegúrate de que el valor de $zona es válido y corresponde con una columna
-        $zonasValidas = ['zona1', 'zona2','zona3', 'zona3_plus', 'zona4', 'zona5','zona6'];
-        
-        // Verificar que la zona es válida antes de construir la consulta
-        if (!in_array($zona, $zonasValidas)) {
-            throw new Exception("Zona inválida : $zona");
-        }
+   
         
         // Construir la consulta SQL con el nombre de la zona dinámicamente
-        $sql = "SELECT $zona FROM paqpremium WHERE peso >= :peso ORDER BY peso LIMIT 1";
+        $sql = "SELECT $zona FROM paqpremium WHERE peso >= $peso ";
         $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([':peso' => $peso]);
+        $stmt->execute();
         $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
         
         if ($resultado) {
@@ -60,13 +53,13 @@ class TarifasEnvio
         
         // Verificar que la zona es válida antes de construir la consulta
         if (!in_array($zona, $zonasValidas)) {
-            throw new Exception("Zona inválida : $zona");
+            return 'Servicio no disponible para los datos introducidos';
         }
         
         // Construir la consulta SQL con el nombre de la zona dinámicamente
-        $sql = "SELECT $zona FROM paqligero WHERE peso >= :peso ORDER BY peso LIMIT 1";
+        $sql = "SELECT $zona FROM paqligero WHERE peso >= $peso  ";
         $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([':peso' => $peso]);
+        $stmt->execute();
         $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
         
         if ($resultado) {
@@ -80,7 +73,7 @@ class TarifasEnvio
 
         $zona = strtolower(trim($zona));
         // Asegúrate de que el valor de $zona es válido y corresponde con una columna
-        $zonasValidas = ['zona1', 'zona2', 'zona3', 'zona3_plus', 'zona4', 'zona5','zona6'];
+        $zonasValidas = ['zona1', 'zona2', 'zona3', 'zona3_plus', 'zona4', 'zona5','zona6','zona7'];
         
         // Verificar que la zona es válida antes de construir la consulta
         if (!in_array($zona, $zonasValidas)) {
@@ -88,9 +81,9 @@ class TarifasEnvio
         }
         
         // Construir la consulta SQL con el nombre de la zona dinámicamente
-        $sql = "SELECT $zona FROM devolucion_paqueteria WHERE peso >= :peso ORDER BY peso LIMIT 1";
+        $sql = "SELECT $zona FROM devolucion_paqueteria WHERE peso >= $peso  ";
         $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([':peso' => $peso]);
+        $stmt->execute();
         $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
         
         if ($resultado) {
@@ -126,7 +119,7 @@ class TarifasEnvio
         $zonasValidas = ['zona1', 'zona2', 'zona3', 'zona3_plus', 'zona4', 'zona5','zona6','zona7'];
          // Verificar que la zona es válida antes de construir la consulta
          if (!in_array($zona, $zonasValidas)) {
-            throw new Exception("Zona inválida : $zona");
+           return 'Servicio no disponible para los datos introducidos';
         }
         
         // Construir la consulta SQL con el nombre de la zona dinámicamente
@@ -144,10 +137,10 @@ class TarifasEnvio
     }
     public function pesoExtraEstandarOficina( $zona) {
         $zona = strtolower(trim($zona));
-        $zonasValidas = ['zona1', 'zona2', 'zona3', 'zona3_plus', 'zona4', 'zona5','zona6','zona7'];
+        $zonasValidas = ['zona1', 'zona2', 'zona3', 'zona3_plus', 'zona4', 'zona5','zona6'];
          // Verificar que la zona es válida antes de construir la consulta
          if (!in_array($zona, $zonasValidas)) {
-            throw new Exception("Zona inválida : $zona");
+            return 'Servicio no disponible para los datos introducidos';
         }
         
         // Construir la consulta SQL con el nombre de la zona dinámicamente
@@ -165,10 +158,10 @@ class TarifasEnvio
     }
     public function pesoExtraPremiumOficina( $zona) {
         $zona = strtolower(trim($zona));
-        $zonasValidas = ['zona1', 'zona2', 'zona3', 'zona3_plus', 'zona4', 'zona5','zona6','zona7'];
+        $zonasValidas = ['zona1', 'zona2', 'zona3', 'zona3_plus', 'zona4', 'zona5','zona6'];
          // Verificar que la zona es válida antes de construir la consulta
          if (!in_array($zona, $zonasValidas)) {
-            throw new Exception("Zona inválida : $zona");
+            return 'Servicio no disponible para los datos introducidos';
         }
         
         // Construir la consulta SQL con el nombre de la zona dinámicamente
@@ -193,7 +186,7 @@ class TarifasEnvio
         
         // Verificar que la zona es válida antes de construir la consulta
         if (!in_array($zona, $zonasValidas)) {
-            throw new Exception("Zona inválida : $zona");
+            return 'Servicio no disponible para los datos introducidos';
         }
         
         // Construir la consulta SQL con el nombre de la zona dinámicamente
@@ -217,7 +210,7 @@ class TarifasEnvio
         
         // Verificar que la zona es válida antes de construir la consulta
         if (!in_array($zona, $zonasValidas)) {
-            throw new Exception("Zona inválida : $zona");
+            return 'Servicio no disponible para los datos introducidos';
         }
         
         // Construir la consulta SQL con el nombre de la zona dinámicamente
@@ -229,7 +222,7 @@ class TarifasEnvio
         if ($resultado) {
             return $resultado[$zona]; // Devolver el valor correspondiente a la zona
         } else {
-            return null; // Si no se encuentra ningún resultado
+            return 'Servicio no disponible para los datos introducidos'; // Si no se encuentra ningún resultado
         }
     }
     

@@ -10,6 +10,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         $origenCP = $_POST['origenCP'];
         $destinoCP = $_POST['destinoCP'];
+        $origenPais = $_POST['origenPais'];
+        $destinoPais = $_POST['destinoPais'];
        // Datos enviados por el cliente
 $peso_real = $_POST['peso']; // Peso real (en kilogramos)
 $largo = $_POST['largo'];    // Largo (en centímetros)
@@ -18,7 +20,7 @@ $alto = $_POST['alto'];      // Alto (en centímetros)
 
 // Calcular el peso volumétrico
 $peso_volumetrico = ($largo * $ancho * $alto) / 6000;
-
+$peso_aplicable=0;
 // Comparar ambos pesos
 if ($peso_volumetrico > $peso_real) {
     $peso_aplicable = $peso_volumetrico;
@@ -45,7 +47,7 @@ if ($peso_volumetrico > $peso_real) {
         }
 
         // Obtener la zona de origen y destino
-        $zonaEnvio = $determinarZona->determinarZonaEnvio($origenCP, $destinoCP);
+        $zonaEnvio = $determinarZona->determinarZonaEnvio($origenCP, $destinoCP, $origenPais, $destinoPais);
 
         // Obtener la tarifa correspondiente para Paquete Estándar
         $tarifaEstandar = $tarifa->obtenerTarifaPaqEstandar($peso_aplicable, $zonaEnvio);
