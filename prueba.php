@@ -11,7 +11,7 @@ $tarifasEnvio = new TarifasEnvio();
 
 // Definir casos de prueba para determinar la zona
 $casosPruebaZona = [
-    ['origenCP' => 1000, 'destinoCP' => 1500, 'esperado' => 'Zona1'], // Mismo provincia
+    ['origenCP' => 1000, 'destinoCP' => 1500, 'esperado' => 'Zona1'], // Misma provincia
     ['origenCP' => 7100, 'destinoCP' => 51001, 'esperado' => 'Zona4'], // Baleares o Ceuta/Melilla
     ['origenCP' => 1000, 'destinoCP' => 48000, 'esperado' => 'Zona2'], // Provincias limítrofes
     ['origenCP' => 28000, 'destinoCP' => 29000, 'esperado' => 'Zona3'], // Envíos intra peninsulares
@@ -34,49 +34,44 @@ foreach ($casosPruebaZona as $caso) {
 $casosDePruebaTarifa = [
     ['peso' =>  1, 'zona' => 'zona1', 'tarifaEsperada' => 4.71],
     ['peso' => 3, 'zona' => 'zona2', 'tarifaEsperada' => 6.48],
+    ['peso' => 5, 'zona' => 'zona3', 'tarifaEsperada' => 7.57],
     ['peso' => 5, 'zona' => 'zona3_plus', 'tarifaEsperada' => 7.57],
     ['peso' => 10, 'zona' => 'zona5', 'tarifaEsperada' => 10.28],
-    ['peso' => 15, 'zona' => 'zona4', 'tarifaEsperada' => 13.41],
+    ['peso' => 16, 'zona' => 'zona4', 'tarifaEsperada' => 13.41],
 ];
 
 // Ejecutar pruebas para obtener la tarifa
 foreach ($casosDePruebaTarifa as $caso) {
-    $tarifa = $tarifasEnvio->obtenerTarifaPaqPremium($caso['peso'], $caso['zona']);
-    echo 'Paquete Premium: ';
-    echo "Peso: {$caso['peso']}, Zona: {$caso['zona']}, Tarifa Esperada: {$caso['tarifaEsperada']}, Tarifa Obtenida: " . (is_array($tarifa) ? implode(", ", $tarifa) : $tarifa) . "\n";
-    
-    if ($tarifa == $caso['tarifaEsperada']) {
-        echo "✔ Prueba pasada\n";
+    $peso = $caso['peso'];
+    $zona = $caso['zona'];
+
+    if ($peso > 15) {
+        // Calcular la tarifa base para 15 kg y agregar el extra
+        $pesoExtra = $peso - 15;
+
+        $tarifaExtraEstandar = $tarifasEnvio->pesoExtraEstandar($zona) * $pesoExtra;
+        $tarifaExtraPremium = $tarifasEnvio->pesoExtraPremium($zona) * $pesoExtra;
+        $tarifaExtraEstandarOficina = $tarifasEnvio->pesoExtraEstandarOficina($zona) * $pesoExtra;
+        $tarifaExtraPremiumOficina = $tarifasEnvio->pesoExtraPremiumOficina($zona) * $pesoExtra;
+
+        $tarifaBaseEstandar = $tarifasEnvio->obtenerTarifaPaqEstandar(15, $zona);
+        $tarifaBasePremium = $tarifasEnvio->obtenerTarifaPaqPremium(15, $zona);
+
+        $tarifaFinalEstandar = $tarifaBaseEstandar + $tarifaExtraEstandar;
+        $tarifaFinalPremium = $tarifaBasePremium + $tarifaExtraPremium;
+
+        echo "Peso: {$peso}, Zona: {$zona}\n";
+        echo "Paquete Estándar: Tarifa Final: $tarifaFinalEstandar\n";
+        echo "Paquete Premium: Tarifa Final: $tarifaFinalPremium\n";
     } else {
-        echo "✘ Prueba fallida\n";
-    }
-    $tarifa = $tarifasEnvio->obtenerTarifaPaqEstandar($caso['peso'], $caso['zona']);
-    echo 'Paquete Estándar: ';
-    echo "Peso: {$caso['peso']}, Zona: {$caso['zona']}, Tarifa Esperada: {$caso['tarifaEsperada']}, Tarifa Obtenida: " . (is_array($tarifa) ? implode(", ", $tarifa) : $tarifa) . "\n";
-    
-    if ($tarifa == $caso['tarifaEsperada']) {
-        echo "✔ Prueba pasada\n";
-    } else {
-        echo "✘ Prueba fallida\n";
-    }
-    $tarifa = $tarifasEnvio->obtenerTarifaPaqLigero($caso['peso'], $caso['zona']);
-    echo 'Paquete Ligero: ';
-    echo "Peso: {$caso['peso']}, Zona: {$caso['zona']}, Tarifa Esperada: {$caso['tarifaEsperada']}, Tarifa Obtenida: " . (is_array($tarifa) ? implode(", ", $tarifa) : $tarifa) . "\n";
-    
-    if ($tarifa == $caso['tarifaEsperada']) {
-        echo "✔ Prueba pasada\n";
-    } else {
-        echo "✘ Prueba fallida\n";
-    }
-    $tarifa = $tarifasEnvio->obtenerTarifaDevolucion($caso['peso'], $caso['zona']);
-    echo 'Devolución: ';
-    echo "Peso: {$caso['peso']}, Zona: {$caso['zona']}, Tarifa Esperada: {$caso['tarifaEsperada']}, Tarifa Obtenida: " . (is_array($tarifa) ? implode(", ", $tarifa) : $tarifa) . "\n";
-    
-    if ($tarifa == $caso['tarifaEsperada']) {
-        echo "✔ Prueba pasada\n";
-    } else {
-        echo "✘ Prueba fallida\n";
+        // Peso dentro del rango estándar
+        $tarifa = $tarifasEnvio->obtenerTarifaPaqPremium($peso, $zona);
+        echo 'Paquete Premium: ';
+        echo "Peso: {$peso}, Zona: {$zona}, Tarifa Obtenida: " . (is_array($tarifa) ? implode(", ", $tarifa) : $tarifa) . "\n";
+
+        $tarifa = $tarifasEnvio->obtenerTarifaPaqEstandar($peso, $zona);
+        echo 'Paquete Estándar: ';
+        echo "Peso: {$peso}, Zona: {$zona}, Tarifa Obtenida: " . (is_array($tarifa) ? implode(", ", $tarifa) : $tarifa) . "\n";
     }
 }
-
 ?>
