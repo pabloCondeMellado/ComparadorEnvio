@@ -69,10 +69,10 @@ if ($peso_volumetrico > $peso_real) {
         if($peso_aplicable>15){
            
             
-            $tarifaExtraEstandar=$tarifa1->pesoExtraEstandar( $zonaEnvio)*($peso_aplicable-15);
-            $tarifaExtraPremium=$tarifa1->pesoExtraPremium( $zonaEnvio)*($peso_aplicable-15);
-            $tarifaExtraEstandarOficina=$tarifa1->pesoExtraEstandarOficina( $zonaEnvio)*($peso_aplicable-15);
-            $tarifaExtraPremiumOficina=$tarifa1->pesoExtraPremiumOficina( $zonaEnvio)*($peso_aplicable-15);
+            $tarifaExtraEstandar=$tarifa1->pesoExtraEstandar( $zonaEnvio)*(ceil($peso_aplicable)-15);
+            $tarifaExtraPremium=$tarifa1->pesoExtraPremium( $zonaEnvio)*(ceil($peso_aplicable)-15);
+            $tarifaExtraEstandarOficina=$tarifa1->pesoExtraEstandarOficina( $zonaEnvio)*(ceil($peso_aplicable)-15);
+            $tarifaExtraPremiumOficina=$tarifa1->pesoExtraPremiumOficina( $zonaEnvio)*(ceil($peso_aplicable)-15);
             $tarifaEstandar=$tarifa->obtenerTarifaPaqEstandar(15, $zonaEnvio)+$tarifaExtraEstandar;
             $tarifaPremium = $tarifa->obtenerTarifaPaqPremium(15, $zonaEnvio)+$tarifaExtraPremium;
             $tarifaEstandarOficina = $tarifa->obtenerTarifaPaqEstandarOficina(15, $zonaEnvio)+$tarifaExtraEstandarOficina;

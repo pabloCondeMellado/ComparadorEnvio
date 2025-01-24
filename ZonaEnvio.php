@@ -19,11 +19,12 @@ public function determinarZonaEnvio($origenCP, $destinoCP, $origenPais, $destino
     
     if ($origenPais === 'Portugal' || $destinoPais === 'Portugal') {
         // Verificar si el origen está en Portugal Peninsular y el destino también en Portugal Peninsular
-        if ($this->esPortugalPeninsular($origenCP, $destinoCP)) {
-            return 'Zona7'; // Envíos a Portugal Peninsular con origen en Península
+       return 'Zona7';
+           // Envíos a Portugal Peninsular con origen en Península
+           
         }
 
-    }
+    
     // Definir las provincias y sus códigos postales
     $provincias = [
         'Álava' => range(1000, 1999),
@@ -247,17 +248,10 @@ private function esCanariasInterislas($origenCP, $destinoCP){
 
 // Verificación si el origen está en Portugal Peninsular y el destino en otro país
 private function esPortugalPeninsular($origenCP, $destinoCP) {
-    // Obtener los países de origen y destino
- 
-    if ($destinoCP >= 1000 && $destinoCP <= 9999) {
-        // Verificar si el origen también está en Portugal Peninsular
-        if ($origenCP >= 1000 && $origenCP <= 9999) {
-            return 'zona7'; // Envío a Portugal Peninsular desde la Península
-        }
-    }
 
-    return 'Fuera de la zona'; // Si no es Portugal Peninsular y España
+    return ($origenCP >=  0&& $origenCP <= 0) && ($destinoCP >= 0&& $destinoCP <= 0);
 }
+
 
 
 
