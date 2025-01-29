@@ -14,15 +14,10 @@ class ZonaEnvio {
         return (string) $this->zona; // O puedes retornar algo más descriptivo, como:
         // return "Código: $this->codigo, Zona: $this->zona";
     }
-public function determinarZonaEnvio($origenCP, $destinoCP, $origenPais, $destinoPais){
+public function determinarZonaEnvio($origenCP, $destinoCP, $destinoPais){
 
-    
-    if ($origenPais === 'Portugal' || $destinoPais === 'Portugal') {
-        // Verificar si el origen está en Portugal Peninsular y el destino también en Portugal Peninsular
-       return 'Zona7';
-           // Envíos a Portugal Peninsular con origen en Península
-           
-        }
+
+  
 
     
     // Definir las provincias y sus códigos postales
@@ -106,6 +101,12 @@ public function determinarZonaEnvio($origenCP, $destinoCP, $origenPais, $destino
         }
     }
 
+    
+    if ($this->esPortugalPeninsular($destinoPais)) {
+        if($destinoPais=="Portugal"){
+            return 'Zona7';
+        } // Envíos Interislas en Canarias
+    }
     // Verificar si el origen o destino están en Baleares, Ceuta o Melilla
     if ($this->esBalearesCeutaMelilla($origenCP, $destinoCP, $baleares)) {
         return 'Zona4'; // Baleares, Ceuta, Melilla
@@ -247,9 +248,9 @@ private function esCanariasInterislas($origenCP, $destinoCP){
 
 
 // Verificación si el origen está en Portugal Peninsular y el destino en otro país
-private function esPortugalPeninsular($origenCP, $destinoCP) {
+private function esPortugalPeninsular($destinoPais) {
 
-    return ($origenCP >=  0&& $origenCP <= 0) && ($destinoCP >= 0&& $destinoCP <= 0);
+    return 1;
 }
 
 

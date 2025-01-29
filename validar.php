@@ -47,7 +47,7 @@ if ($peso_volumetrico > $peso_real) {
         }
 
         // Obtener la zona de origen y destino
-        $zonaEnvio = $determinarZona->determinarZonaEnvio($origenCP, $destinoCP, $origenPais, $destinoPais);
+        $zonaEnvio = $determinarZona->determinarZonaEnvio($origenCP, $destinoCP,  $destinoPais);
 
         // Obtener la tarifa correspondiente para Paquete Estándar
         $tarifaEstandar = $tarifa->obtenerTarifaPaqEstandar($peso_aplicable, $zonaEnvio);
@@ -71,12 +71,17 @@ if ($peso_volumetrico > $peso_real) {
             
             $tarifaExtraEstandar=$tarifa1->pesoExtraEstandar( $zonaEnvio)*(ceil($peso_aplicable)-15);
             $tarifaExtraPremium=$tarifa1->pesoExtraPremium( $zonaEnvio)*(ceil($peso_aplicable)-15);
-            $tarifaExtraEstandarOficina=$tarifa1->pesoExtraEstandarOficina( $zonaEnvio)*(ceil($peso_aplicable)-15);
-            $tarifaExtraPremiumOficina=$tarifa1->pesoExtraPremiumOficina( $zonaEnvio)*(ceil($peso_aplicable)-15);
+            if($destinoPais=="España"){
+                $tarifaExtraEstandarOficina=$tarifa1->pesoExtraEstandarOficina( $zonaEnvio)*(ceil($peso_aplicable)-15);
+                $tarifaExtraPremiumOficina=$tarifa1->pesoExtraPremiumOficina( $zonaEnvio)*(ceil($peso_aplicable)-15);
+            }
+          
             $tarifaEstandar=$tarifa->obtenerTarifaPaqEstandar(15, $zonaEnvio)+$tarifaExtraEstandar;
             $tarifaPremium = $tarifa->obtenerTarifaPaqPremium(15, $zonaEnvio)+$tarifaExtraPremium;
+            if($destinoPais== "España"){
             $tarifaEstandarOficina = $tarifa->obtenerTarifaPaqEstandarOficina(15, $zonaEnvio)+$tarifaExtraEstandarOficina;
             $tarifaPremiumOficina = $tarifa->obtenerTarifaPaqPremiumOficina(15, $zonaEnvio)+$tarifaExtraPremiumOficina;
+            }
         }
         // Especificar el tipo de contenido como HTML
         header('Content-Type: text/html; charset=UTF-8');
