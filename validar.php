@@ -225,10 +225,7 @@ if ($tarifaPremium) {
     echo '<p>' . $tarifaPremium . ' EUR</p>';
     echo '</div>';
 } else {
-    echo '<div class="tarifa-container">';
-    echo '<h3>Tarifa Paquete Premium</h3>';
-    echo '<p class="error-message">Error: No se encontró una tarifa para los datos proporcionados.</p>';
-    echo '</div>';
+   echo '';
 }
 
 // Mostrar tarifa ligera (si corresponde)
@@ -238,10 +235,7 @@ if ($tarifaLigero) {
     echo '<p>' . $tarifaLigero . ' EUR</p>';
     echo '</div>';
 } else {
-    echo '<div class="tarifa-container">';
-    echo '<h3>Tarifa Paquete Ligero</h3>';
-    echo '<p class="error-message"> No se encontró una tarifa para los datos proporcionados.</p>';
-    echo '</div>';
+  echo '';
 }
 // Mostrar tarifa estándar
 if ($tarifaEstandarOficina) {
@@ -250,10 +244,7 @@ if ($tarifaEstandarOficina) {
     echo '<p>' . $tarifaEstandarOficina . ' EUR</p>';
     echo '</div>';
 } else {
-    echo '<div class="tarifa-container">';
-    echo '<h3>Recoger paquete en oficina Estandar</h3>';
-    echo '<p class="error-message">Error: No se encontró una tarifa para los datos proporcionados.</p>';
-    echo '</div>';
+echo '';
 }
 
 // Mostrar tarifa premium
@@ -263,10 +254,7 @@ if ($tarifaPremiumOficina) {
     echo '<p>' . $tarifaPremiumOficina . ' EUR</p>';
     echo '</div>';
 } else {
-    echo '<div class="tarifa-container">';
-    echo '<h3>Tarifa Paquete Premium</h3>';
-    echo '<p class="error-message">Error: No se encontró una tarifa para los datos proporcionados.</p>';
-    echo '</div>';
+   echo '';
 }
     }
 }
