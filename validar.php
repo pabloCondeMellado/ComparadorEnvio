@@ -71,6 +71,8 @@ if ($peso_volumetrico > $peso_real) {
             
             $tarifaExtraEstandar=$tarifa1->pesoExtraEstandar( $zonaEnvio)*(ceil($peso_aplicable)-15);
             $tarifaExtraPremium=$tarifa1->pesoExtraPremium( $zonaEnvio)*(ceil($peso_aplicable)-15);
+
+
             if($destinoPais=="España"){
                 $tarifaExtraEstandarOficina=$tarifa1->pesoExtraEstandarOficina( $zonaEnvio)*(ceil($peso_aplicable)-15);
                 $tarifaExtraPremiumOficina=$tarifa1->pesoExtraPremiumOficina( $zonaEnvio)*(ceil($peso_aplicable)-15);
@@ -78,6 +80,8 @@ if ($peso_volumetrico > $peso_real) {
           
             $tarifaEstandar=$tarifa->obtenerTarifaPaqEstandar(15, $zonaEnvio)+$tarifaExtraEstandar;
             $tarifaPremium = $tarifa->obtenerTarifaPaqPremium(15, $zonaEnvio)+$tarifaExtraPremium;
+
+
             if($destinoPais== "España"){
             $tarifaEstandarOficina = $tarifa->obtenerTarifaPaqEstandarOficina(15, $zonaEnvio)+$tarifaExtraEstandarOficina;
             $tarifaPremiumOficina = $tarifa->obtenerTarifaPaqPremiumOficina(15, $zonaEnvio)+$tarifaExtraPremiumOficina;
@@ -229,7 +233,7 @@ if ($tarifaPremium) {
 }
 
 // Mostrar tarifa ligera (si corresponde)
-if ($tarifaLigero) {
+if ($peso_aplicable<=2) {
     echo '<div class="tarifa-container">';
     echo '<h3>Tarifa Paquete Ligero</h3>';
     echo '<p>' . $tarifaLigero . ' EUR</p>';
@@ -238,25 +242,22 @@ if ($tarifaLigero) {
   echo '';
 }
 // Mostrar tarifa estándar
-if ($tarifaEstandarOficina) {
+if ($destinoPais=="España") {
     echo '<div class="tarifa-container">';
     echo '<h3>Recoger paquete en oficina Estandar</h3>';
     echo '<p>' . $tarifaEstandarOficina . ' EUR</p>';
     echo '</div>';
-} else {
-echo '';
-}
+} 
 
 // Mostrar tarifa premium
-if ($tarifaPremiumOficina) {
+if ($destinoPais=="España"){ {
     echo '<div class="tarifa-container">';
     echo '<h3>Recoger paquete en oficina Premium</h3>';
     echo '<p>' . $tarifaPremiumOficina . ' EUR</p>';
     echo '</div>';
-} else {
-   echo '';
-}
+} 
     }
+}
 }
 ?>
 </body>
