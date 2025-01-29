@@ -8,15 +8,15 @@ $determinarZona = new ZonaEnvio();
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($_POST['origenCP']) && isset($_POST['destinoCP']) && isset($_POST['peso'])) {
 
-        $origenCP = $_POST['origenCP'];
-        $destinoCP = $_POST['destinoCP'];
-        $origenPais = $_POST['origenPais'];
-        $destinoPais = $_POST['destinoPais'];
+        $origenCP =htmlspecialchars($_POST['origenCP']) ;
+        $destinoCP =htmlspecialchars($_POST['destinoCP']) ;
+        $origenPais =htmlspecialchars($_POST['origenPais']) ;
+        $destinoPais =htmlspecialchars ($_POST['destinoPais']);
        // Datos enviados por el cliente
-$peso_real = $_POST['peso']; // Peso real (en kilogramos)
-$largo = $_POST['largo'];    // Largo (en centímetros)
-$ancho = $_POST['ancho'];    // Ancho (en centímetros)
-$alto = $_POST['alto'];      // Alto (en centímetros)
+$peso_real = htmlspecialchars( $_POST['peso']); // Peso real (en kilogramos)
+$largo = htmlspecialchars($_POST['largo']) ;    // Largo (en centímetros)
+$ancho =htmlspecialchars($_POST['ancho']) ;    // Ancho (en centímetros)
+$alto =htmlspecialchars($_POST['alto']) ;      // Alto (en centímetros)
 
 // Calcular el peso volumétrico
 $peso_volumetrico = ($largo * $ancho * $alto) / 6000;
