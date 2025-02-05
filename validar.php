@@ -217,6 +217,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <p><strong>Zona de Envío:</strong> <?php echo $zonaEnvio ?> </p>
             <p><strong>Peso Volumétrico:</strong> <?php echo $peso_aplicable ?> </p>
             <?php
+              echo '<h2>Correos:</h2>';
             // Mostrar tarifa estándar
             if ($tarifaEstandar) {
                 echo '<div class="tarifa-container">';
@@ -239,15 +240,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             } else {
                 echo '';
             }
-            // Mostrar tarifa seur
-            if ($tarifaSeur) {
-                echo '<div class="tarifa-container">';
-                echo '<h3>Tarifa Seur</h3>';
-                echo '<p>' . $tarifaSeur. ' EUR</p>';
-                echo '</div>';
-            } else {
-                echo '';
-            }
+          
 
 
             // Mostrar tarifa ligera (si corresponde)
@@ -274,6 +267,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     echo '<p>' . $tarifaPremiumOficina . ' EUR</p>';
                     echo '</div>';
                 }
+            }
+            echo '<h2>Seur:</h2>';
+            // Mostrar tarifa seur
+            if ($tarifaSeur) {
+                echo '<div class="tarifa-container">';
+                echo '<h3>Tarifa Seur</h3>';
+                echo '<p>' . $tarifaSeur. ' EUR</p>';
+                echo '</div>';
+            } else {
+                echo '';
             }
     }
 }
