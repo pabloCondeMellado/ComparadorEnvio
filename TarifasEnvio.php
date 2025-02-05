@@ -177,6 +177,23 @@ class TarifasEnvio
         }
         
     }
+    public function pesoExtraSeur( $zona) {
+        $zona = strtolower(trim($zona));
+        
+        
+        // Construir la consulta SQL con el nombre de la zona dinámicamente
+        $sql = "SELECT $zona FROM seur WHERE id=12 ";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute();
+        $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        if ($resultado) {
+            return $resultado[$zona]; // Devolver el valor correspondiente a la zona
+        } else {
+            return null; // Si no se encuentra ningún resultado
+        }
+
+    }
     
     public function obtenerTarifaPaqPremiumOficina($peso, $zona) {
 
@@ -225,7 +242,25 @@ class TarifasEnvio
             return 'Servicio no disponible para los datos introducidos'; // Si no se encuentra ningún resultado
         }
     }
-    
-}
+ 
 
+public function obtenerTarifaSeur($peso, $zona) {
+
+ 
+    // Construir la consulta SQL para obtener la tarifa correspondiente al peso
+    $sql = "SELECT $zona FROM seur WHERE Kilo >= $peso  ";
+    $stmt = $this->pdo->prepare($sql);
+    $stmt->execute();
+    
+    // Obtener el resultado de la consulta
+    $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
+   
+    // Verificar si se obtuvo un resultado
+    if ($resultado) {
+        return $resultado[$zona]; // Devolver el valor correspondiente a la zona
+    } else {
+        return null; // Si no se encuentra un resultado adecuado
+    }
+    } 
+}
 ?>
